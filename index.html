@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuikTools - Free Online File, Image & Video Tools</title>
+  <meta name="description" content="Convert PDFs, edit images, and process videos 100% free. No registration required.">
+  <meta name="keywords" content="PDF converter, image editor, video tools, free online tools">
+  <link rel="icon" href="https://img.icons8.com/fluency/48/document.png" type="image/png">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.6; background: #f8f9fa; color: #333; }
+    
+    /* Header */
+    header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    nav { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+    .logo { font-size: 1.5rem; font-weight: 700; color: white; text-decoration: none; }
+    nav ul { display: flex; gap: 1.5rem; list-style: none; }
+    nav ul li a { color: white; text-decoration: none; font-weight: 500; transition: opacity 0.3s; }
+    nav ul li a:hover { opacity: 0.8; }
+    
+    /* Hero */
+    .hero { text-align: center; padding: 4rem 2rem; max-width: 800px; margin: 0 auto; }
+    .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: 1.1rem; color: #555; margin-bottom: 2rem; }
+    .btn { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.8rem 1.8rem; border-radius: 50px; text-decoration: none; font-weight: 600; transition: transform 0.3s, box-shadow 0.3s; }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(118, 75, 162, 0.2); }
+    
+    /* Tools */
+    .tools { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+    .tool-card { background: white; border-radius: 10px; padding: 1.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: transform 0.3s; }
+    .tool-card:hover { transform: translateY(-5px); }
+    .tool-card h3 { color: #764ba2; margin-bottom: 0.5rem; }
+    .tool-card p { color: #666; margin-bottom: 1rem; font-size: 0.95rem; }
+    
+    /* Footer */
+    footer { background: #2d3748; color: #e2e8f0; text-align: center; padding: 2rem; margin-top: 3rem; }
+    .footer-links { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; }
+    .footer-links a { color: #a0aec0; text-decoration: none; transition: color 0.3s; }
+    .footer-links a:hover { color: white; }
+    
+    /* Mobile */
+    @media (max-width: 768px) {
+      nav { flex-direction: column; gap: 1rem; }
+      nav ul { flex-wrap: wrap; justify-content: center; }
+      .hero h1 { font-size: 2rem; }
+      .tools { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html" class="logo">QuikTools</a>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="pdf-tools.html">PDF Tools</a></li>
+        <li><a href="image-tools.html">Image Tools</a></li>
+        <li><a href="video-tools.html">Video Tools</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Powerful Free File Tools</h1>
+      <p>Convert, edit, and optimize your files in seconds with no registration required.</p>
+      <a href="#tools" class="btn">Explore Tools</a>
+    </section>
+
+    <section id="tools" class="tools">
+      <div class="tool-card">
+        <h3>PDF to Word</h3>
+        <p>Convert any PDF to editable Microsoft Word documents while preserving formatting.</p>
+        <a href="pdf-to-word.html" class="btn">Convert Now</a>
+      </div>
+      <div class="tool-card">
+        <h3>PDF to Excel</h3>
+        <p>Extract tables from PDFs into fully editable Excel spreadsheets.</p>
+        <a href="pdf-to-excel.html" class="btn">Convert Now</a>
+      </div>
+      <div class="tool-card">
+        <h3>Image to PDF</h3>
+        <p>Combine multiple images into a single PDF file with adjustable quality.</p>
+        <a href="image-to-pdf.html" class="btn">Convert Now</a>
+      </div>
+      <div class="tool-card">
+        <h3>Remove Background</h3>
+        <p>Automatically remove backgrounds from images with AI precision.</p>
+        <a href="remove-bg.html" class="btn">Try Now</a>
+      </div>
+      <div class="tool-card">
+        <h3>Video Compressor</h3>
+        <p>Reduce video file size without noticeable quality loss.</p>
+        <a href="video-compressor.html" class="btn">Compress Now</a>
+      </div>
+      <div class="tool-card">
+        <h3>Watermark Remover</h3>
+        <p>Erase watermarks from images while preserving original quality.</p>
+        <a href="watermark-remover.html" class="btn">Remove Now</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="contact.html">Contact Us</a>
+    </div>
+    <p>&copy; 2025 QuikTools. All rights reserved.</p>
+  </footer>
+</body>
+</html>
