@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF to Word Converter | QuickFileTools</title>
+  <meta name="description" content="Convert PDF to Word online for free - No watermarks, no registration. Premium options for large files.">
+  <style>
+    :root {
+      --primary: #4285F4;
+      --primary-dark: #3367D6;
+      --error: #EA4335;
+      --success: #34A853;
+      --light-bg: #f8f9fa;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+    body {
+      background: var(--light-bg);
+      color: #333;
+      line-height: 1.6;
+    }
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .converter-box {
+      background: white;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .upload-area {
+      border: 2px dashed #ccc;
+      padding: 3rem 1rem;
+      margin: 1rem 0;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .upload-area:hover {
+      border-color: var(--primary);
+    }
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    .premium-cta {
+      background: linear-gradient(90deg, #FFA500, #FF6347);
+      color: white;
+      padding: 1rem;
+      border-radius: 5px;
+      margin-top: 2rem;
+    }
+    .progress-bar {
+      height: 5px;
+      background: #eee;
+      margin: 1rem 0;
+      border-radius: 5px;
+      overflow: hidden;
+      display: none;
+    }
+    .progress {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s;
+    }
+    #result {
+      display: none;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PDF to Word Converter</h1>
+    <p>100% Free - No Watermarks - No Registration</p>
+  </header>
+
+  <div class="container">
+    <div class="converter-box">
+      <h2>Upload Your PDF</h2>
+      <p>Files are processed in your browser for maximum privacy</p>
+      
+      <div class="upload-area" id="uploadArea">
+        <p>Drag & drop PDF here or click to browse</p>
+        <input type="file" id="fileInput" accept=".pdf" style="display:none">
+        <button class="btn" id="uploadBtn">Select PDF</button>
+      </div>
+      
+      <div class="progress-bar" id="progressBar">
+        <div class="progress" id="progress"></div>
+      </div>
+      
+      <div id="result">
+        <p>Conversion complete!</p>
+        <button class="btn" id="downloadBtn">Download Word File</button>
+      </div>
+      
+      <div class="premium-cta">
+        <h3>Need more power?</h3>
+        <p>Premium users get batch conversions and 100MB file limits</p>
+        <button class="btn" id="upgradeBtn">Upgrade Now ($5/month)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PDF.js for client-side conversion -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+  <script>
+    // Initialize PDF.js worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+    
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const progressBar = document.getElementById('progressBar');
+    const progress = document.getElementById('progress');
+    const result = document.getElementById('result');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const upgradeBtn = document.getElementById('upgradeBtn');
+    
+    let convertedBlob = null;
+    
+    // File selection
+    uploadBtn.addEventListener('click', () => fileInput.click());
+    uploadArea.addEventListener('click', () => fileInput.click());
+    
+    fileInput.addEventListener('change', handleFileSelect);
+    
+    // Drag and drop
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(event => {
+      uploadArea.addEventListener(event, preventDefaults, false);
+    });
+    
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
+    ['dragenter', 'dragover'].forEach(event => {
+      uploadArea.addEventListener(event, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(event => {
+      uploadArea.addEventListener(event, unhighlight, false);
+    });
+    
+    function highlight() {
+      uploadArea.style.borderColor = var(--primary);
+    }
+    
+    function unhighlight() {
+      uploadArea.style.borderColor = '#ccc';
+    }
+    
+    uploadArea.addEventListener('drop', handleDrop, false);
+    
+    function handleDrop(e) {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      if (files.length) {
+        fileInput.files = files;
+        handleFileSelect();
+      }
+    }
+    
+    // Conversion logic
+    async function handleFileSelect() {
+      const file = fileInput.files[0];
+      if (!file) return;
+      
+      // Check file size
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Free version supports files up to 5MB. Upgrade for larger files.');
+        return;
+      }
+      
+      // Show progress
+      progressBar.style.display = 'block';
+      progress.style.width = '10%';
+      
+      try {
+        // Convert PDF to text (simplified Word conversion)
+        const text = await extractTextFromPDF(file);
+        convertedBlob = new Blob([text], { type: 'application/msword' });
+        
+        // Complete progress
+        progress.style.width = '100%';
+        setTimeout(() => {
+          progressBar.style.display = 'none';
+          result.style.display = 'block';
+        }, 500);
+        
+      } catch (error) {
+        alert('Conversion failed: ' + error.message);
+        progressBar.style.display = 'none';
+      }
+    }
+    
+    async function extractTextFromPDF(file) {
+      return new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        
+        fileReader.onload = async function() {
+          try {
+            const typedArray = new Uint8Array(this.result);
+            const pdf = await pdfjsLib.getDocument(typedArray).promise;
+            
+            let fullText = '';
+            for (let i = 1; i <= pdf.numPages; i++) {
+              const page = await pdf.getPage(i);
+              const textContent = await page.getTextContent();
+              fullText += textContent.items.map(item => item.str).join(' ');
+              
+              // Update progress
+              progress.style.width = `${Math.min(90, (i / pdf.numPages) * 90)}%`;
+            }
+            
+            // Format as simple Word document
+            const wordContent = `
+              <html xmlns:o="urn:schemas-microsoft-com:office:office" 
+                    xmlns:w="urn:schemas-microsoft-com:office:word">
+              <head>
+                <title>${file.name.replace('.pdf', '.doc')}</title>
+              </head>
+              <body>
+                ${fullText.split('\n').map(para => `<p>${para}</p>`).join('')}
+              </body>
+              </html>
+            `;
+            
+            resolve(wordContent);
+          } catch (err) {
+            reject(err);
+          }
+        };
+        
+        fileReader.readAsArrayBuffer(file);
+      });
+    }
+    
+    // Download handler
+    downloadBtn.addEventListener('click', () => {
+      if (convertedBlob) {
+        const url = URL.createObjectURL(convertedBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileInput.files[0].name.replace('.pdf', '.doc');
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, 100);
+      }
+    });
+    
+    // Premium upgrade
+    upgradeBtn.addEventListener('click', () => {
+      // In production: Link to Stripe checkout
+      alert('Redirecting to premium upgrade...');
+      // window.location.href = '/upgrade';
+    });
+  </script>
+</body>
+</html>
